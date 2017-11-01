@@ -1,10 +1,9 @@
 import java.io.IOException;
-
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class MaxTemperatureReducer extends Reducer<Text, IntWritable, Text, Text> {
+public class MaxTemperatureCombiner extends Reducer<Text, IntWritable, Text, IntWritable> {
 	@Override
 	public void reduce(Text key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
@@ -16,6 +15,7 @@ public class MaxTemperatureReducer extends Reducer<Text, IntWritable, Text, Text
 			minValue = Math.min(minValue, value.get());			
 		}
 				
-		context.write(key, new Text(minValue + ","+maxValue));		
+		context.write(key, new IntWritable(minValue));
+		context.write(key, new IntWritable(maxValue));
 	}
 }
